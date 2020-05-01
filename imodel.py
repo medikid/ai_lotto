@@ -1,5 +1,5 @@
 
-from ipynb.fs.full.ifile import iFile
+%run '../ifile.py' #from ipynb.fs.full.ifile import iFile
 
 class Model(iFile):
     _M=None;

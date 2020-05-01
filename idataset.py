@@ -2,8 +2,8 @@
 import pandas as pd
 import numpy as np
 
-from ipynb.fs.full.ifile import iFile
-from ipynb.fs.full.idata import Data
+%run '../ifile.py' #from ipynb.fs.full.ifile import iFile
+%run '../idata.py' #from ipynb.fs.full.idata import Data
 
 class Dataset(iFile):
     _ID = None;
