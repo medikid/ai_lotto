@@ -125,18 +125,15 @@ class Data(iFile):
         return max_id;
     
     def deconstruct_master_df(self):
-        if(self._DF_IDs is None):
-            self._DF_IDs, self._DF_R, self._DF_DR, self._DF_DP = pd.DataFrame(),pd.DataFrame(),pd.DataFrame(),pd.DataFrame();
+        if(self._DF_MASTER is None):
+            self.load_master_df();
+        else:
+            self._DF_IDs = pd.DataFrame(self._DF_MASTER.index);
+            self._DF_R = self._DF_MASTER.loc[:,self.get_result_columns()]
+            self._DF_DR = self._DF_MASTER.loc[:,self.get_draw_columns()]
+            self._DF_DP = self._DF_MASTER.loc[:,self.get_depth_columns()]
 
-            if (self._DF_MASTER is None ): #or self._DF_MASTER.empty): #empty is an attribute, not a function
-                print("ERROR: Missing Master Dataframe");
-            else:
-                self._DF_IDs = pd.DataFrame(self._DF_MASTER.index);
-                self._DF_R = self._DF_MASTER.loc[:,self.get_result_columns()]
-                self._DF_DR = self._DF_MASTER.loc[:,self.get_draw_columns()]
-                self._DF_DP = self._DF_MASTER.loc[:,self.get_depth_columns()]
-
-            return self._DF_IDs, self._DF_R, self._DF_DR, self._DF_DP;
+        return self._DF_IDs, self._DF_R, self._DF_DR, self._DF_DP;
     
     def df2np(self, df):
         if(isinstance(df, pd.DataFrame)):
