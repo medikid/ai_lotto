@@ -128,7 +128,7 @@ class Data(iFile):
         if(self._DF_IDs is None):
             self._DF_IDs, self._DF_R, self._DF_DR, self._DF_DP = pd.DataFrame(),pd.DataFrame(),pd.DataFrame(),pd.DataFrame();
 
-            if (self._DF_MASTER is None ): #or self._DF_MASTER.empty): #empty is an attribute, not a function
+            if (self._DF_MASTER is not None ): #or self._DF_MASTER.empty): #empty is an attribute, not a function
                 print("ERROR: Missing Master Dataframe");
             else:
                 self._DF_IDs = pd.DataFrame(self._DF_MASTER.index);
