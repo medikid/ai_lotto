@@ -6,7 +6,7 @@ import seaborn as sb
 import keras as kr
 from numpy import array
 #!python3 '../ifile.py' #from ipynb.fs.full.ifile 
-import iFile
+from ifile import iFile
 
 class Data(iFile):
     _FILE_FORMAT = "pkl"

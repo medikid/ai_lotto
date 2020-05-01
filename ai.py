@@ -1,7 +1,10 @@
 
-!python3 '../ker_model.py' #from ipynb.fs.full.ker_model import KER_Model;
-!python3 '../tfl_model.py' #from ipynb.fs.full.tfl_model import TFL_Model;
-!python3 '../idataset.py' #from ipynb.fs.full.idataset import Dataset
+#!python3 '../ker_model.py' #from ipynb.fs.full.ker_model 
+from ker_model import KER_Model;
+#!python3 '../tfl_model.py' #from ipynb.fs.full.tfl_model 
+from tfl_model import TFL_Model;
+#!python3 '../idataset.py' #from ipynb.fs.full.idataset 
+from idataset import Dataset
 
 import numpy as np
 import pandas as pd

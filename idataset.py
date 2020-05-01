@@ -3,9 +3,9 @@ import pandas as pd
 import numpy as np
 
 #!python3 '../ifile.py' #from ipynb.fs.full.ifile 
-import iFile
+from ifile import iFile
 #!python3 '../idata.py' #from ipynb.fs.full.idata 
-import Data
+from idata import Data
 
 class Dataset(iFile):
     _ID = None;
