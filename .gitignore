@@ -1,1 +1,5 @@
-data/
+*.npz
+*.csv
+*.pkl
+*.xlsx
+*.pyc
