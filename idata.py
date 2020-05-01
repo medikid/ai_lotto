@@ -5,7 +5,7 @@ import matplotlib as plt
 import seaborn as sb
 import keras as kr
 from numpy import array
-%run '../ifile.py' #from ipynb.fs.full.ifile import iFile
+!python3 '../ifile.py' #from ipynb.fs.full.ifile import iFile
 
 class Data(iFile):
     _FILE_FORMAT = "pkl"
