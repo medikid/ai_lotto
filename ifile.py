@@ -40,6 +40,7 @@ class iFile:
         
     def derive_game_path(self, DatasetInfo):
         self._GAME_PATH = 'data/' + DatasetInfo['GAME'] + "/";
+        print("[iFile:derive_game_path]{0}".format(self._GAME_PATH));
         
     def derive_dataset_path(self, DatasetInfo):
         self._DATASET_PATH = DatasetInfo['xnINPUTS']  + "/" + DatasetInfo['xnDRAWS'] + "/";

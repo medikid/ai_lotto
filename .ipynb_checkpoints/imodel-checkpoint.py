@@ -20,9 +20,8 @@ class Model(iFile):
         self.decipher_file_name();
         
         #we are not deriving folder_path, but using dataset folder
-                
-        self.derive_file_path();        
-        self.derive_game_path(Dataset._INFO) #derives 'data/keno'
+           
+        self.derive_file_path();
         self.derive_full_path();
         print("[iModel:__init__")
         
@@ -47,7 +46,10 @@ class Model(iFile):
         
         self.set_decipher_info();        
     
-               
+    def derive_game_path(self):
+        self._GAME_PATH = self._INFO['GAME']
+        
+            
     def derive_file_path(self):
         #derive file name from decipher  
         #FilePath = self._FOLDER_PATH;
@@ -57,7 +59,6 @@ class Model(iFile):
         #FilePath += "/" + self._INFO['VERSION'];
         FilePath += self._FILE_NAME;
         FilePath += "." + self._FILE_FORMAT;
-        
         self._FILE_PATH = FilePath;
         print("[iModel:derive_file_path] {0}".format(self._FILE_PATH))
         
@@ -66,19 +67,13 @@ class Model(iFile):
         print("[iModel:load] Not Implemented")
         pass;
     
-    def get_untrained_folder_path(self):
-        return self._ROOT_FOLDER + self._GAME_PATH +'untrained_models/';
-        
- 
     def load_untrained(self):
-        untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD + ".h5";
-        self._M.load(untrained_file_path);
-        print("Saved untrained model {0}".format(untrained_file_path));
-       
+        untrained_file_path = self._GAME_PATH +'/untrained_models/' + self._GAME + "." + self._API + "." + self._BUILD + ".h5";
+        print(untrained_file_path);
+        
     def save_untrained(self):
-        untrained_file_path = self.get_untrained_folder_path()  + self._GAME + "." + self._API + "." + self._BUILD + ".h5";
-        self._M.save(untrained_file_path);
-        print("Saved untrained model {0}".format(untrained_file_path));
+        untrained_file_path = self._GAME_PATH +'/untrained_models/' + self._GAME + "." + self._API + "." + self._BUILD + ".h5";
+        print(untrained_file_path);
     
     def load_best_version(self):
         print("[iModel:load_best_version] Not Implemented")

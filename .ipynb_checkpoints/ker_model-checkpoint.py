@@ -20,11 +20,6 @@ class KER_Model(Model):
         print("[KER_Model:load]: Loading {0}".format(self._FULL_PATH))
         pass;
     
-    def load_untrained(self):
-        untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD + ".h5";
-        self._M = load_model(untrained_file_path);
-        print("[KER_Model:load_untrained] {0}".format(untrained_file_path));
-        
     def save(self):
         self._M.save(self._FULL_PATH)
         print("[KER_Model:save]: Saving {0}".format(self._FULL_PATH))
