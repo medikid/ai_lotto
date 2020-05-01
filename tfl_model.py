@@ -1,5 +1,6 @@
 
-%run '../imodel.py' #from ipynb.fs.full.imodel import Model
+#!python3 '../imodel.py' #from ipynb.fs.full.imodel 
+from imodel import Model
 import tensorflow as tfl
 
 class TFL_Model(Model):

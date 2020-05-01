@@ -1,5 +1,6 @@
 
-!python3 '../imodel.py' #from ipynb.fs.full.imodel import Model
+#!python3 '../imodel.py' #from ipynb.fs.full.imodel 
+from imodel import Model
 import keras as kr
 from keras.models import Sequential, load_model
 from keras.layers import LSTM, Dense
