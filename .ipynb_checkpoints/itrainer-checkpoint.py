@@ -1,8 +1,6 @@
 
 from idataset import Dataset
 from imodel import Model
-from ker_model import KER_Model
-from tfl_model import TFL_Model
 
 from keras.callbacks import ModelCheckpoint
 
@@ -13,39 +11,35 @@ class Trainer:
     _BATCH_SIZE=100;
     _CALLBACKS=[]
     
-    def __init__(self, ModelID, DatasetID):
-        self._DATASET = Dataset(DatasetID);
-        self._DATASET.load()
-        
-        self._MODEL = Model(ModelID, self._DATASET);
-        self._MODEL.load();
-       
+    def __init__(self, Model, Dataset):
+        self._MODEL = Model;
+        self._DATASET = Dataset;
+        pass;
     
     def set_callbacks(self, Callbacks={}):
-         for key, val in Callbacks.items():
+         for key, val in Callbacks:
             if(key == 'per_epoch'):
                 self.set_checkpoint_per_epoch(val);
             
     
     def set_checkpoint_per_epoch(self, PerEpoch=5):
-        file_name = self._MODEL._INFO['GAME'] + '.';
-        file_name += self._MODEL._INFO['API']  + '.';
-        file_name += self._MODEL._INFO['BUILD']  + '.';
-        file_name += self._MODEL._INFO['MAKE']  + '.';
-        file_name += 'e{epoch:04d}';
+        filename = self._MODEL._INFO['GAME'] + '.';
+        filename += self._MODEL._INFO['API']  + '.';
+        filename += self._MODEL._INFO['BUILD']  + '.';
+        filename += self._MODEL._INFO['MAKE']  + '.';
+        filename += 'e{epoch:04d}';
         
         self._MODEL.derive_checkpoints_folder();    
-        chkpnt_file = self._MODEL._CHECKPOINTS_FOLDER + file_name + '.h5';
-        self._MODEL.ensure_dirs(chkpnt_file); #ensure checkpnt folder exists, folder doesn't work, so use filepath
+        file_path = self._CHECKPOINTS_FOLDER + filename + '.h5'
         chkpnt = ModelCheckpoint(            
-            chkpnt_file,
+            filepath,
             monitor='val_loss',
             verbose=0,
             save_best_only=False,
             save_weights_only=False,
             mode='auto',
             period=PerEpoch);
-        self._CALLBACKS.append(chkpnt)
+        self._CALLBACKS.append(ckhpnt)
     
     def train(self, Epochs=10, BatchSize=100, Callbacks={}, Verbose=0):
         self._EPOCHS = Epochs;
@@ -63,7 +57,7 @@ class Trainer:
                             , shuffle = False \
                             #, class_weight=None \
                             #, sample_weight=None \
-                            #, initial_epoch = self._MODEL._CHECKPOINT_EPOCH \
+                            , initial_epoch = self._MODEL._M._INITIAL_EPOCH \
                             #, steps_per_epoch=None \
                             #, validation_steps=None \
                             #, validation_freq=1 \
@@ -72,3 +66,6 @@ class Trainer:
                             #, use_multiprocessing=False\
                             );
       
+            
+        
+        

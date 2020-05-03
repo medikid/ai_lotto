@@ -13,33 +13,32 @@ class KER_Model_Loader:
         Version = Model._INFO['VERSION']
         k = Sequential();
         
-        if(Build == 1):
-            k.add(LSTM(units=100, activation='relu', input_shape=(dataset['X'].shape[1], dataset['X'].shape[2]) , return_sequences=True ));
+        if(Build == '1'):
+            k.add(LSTM(units=100, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]) , return_sequences=True ));
             k.add(LSTM(units=100, activation='relu'))
-            k.add(Dense(dataset['Y'].shape[1]));
+            k.add(Dense(Model._D_Y_SHAPE[1]));
             k.compile(optimizer='adam', loss='mse', metrics=['accuracy']);
-            
-        elif (Build == 2):
-            k.add(LSTM(units=100, activation='relu', input_shape=(dataset['X'].shape[1], dataset['X'].shape[2]) , return_sequences=True ));
+            print("[KER_Model_loader: loaded build {0}]".format(Build))
+        elif (Build == '2'):
+            k.add(LSTM(units=100, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2])   ,  return_sequences=True ));
             k.add(LSTM(units=100, activation='relu'))
-            k.add(Dense(dataset['Y'].shape[1]));
+            k.add(Dense(Model._D_Y_SHAPE[1]));
             k.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
-            
-        elif (Build == 3):
-            k.add(LSTM(units=80, activation='relu', input_shape=(dataset['X'].shape[1], dataset['X'].shape[2]) , return_sequences=True ));
+            print("[KER_Model_loader: loaded build {0}]".format(Build))
+        elif (Build == '3'):
+            k.add(LSTM(units=80, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2])   ,  return_sequences=True ));
             k.add(LSTM(units=160, activation='relu'))
             k.add(Dense(units=160, activation='relu'));
-            k.add(Dense(dataset['Y'].shape[1]));
+            k.add(Dense(Model._D_Y_SHAPE[1]));
             k.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
-            
-        elif (Build == 4):
-            k.add(LSTM(units=80, activation='relu', input_shape=(dataset['X'].shape[1], dataset['X'].shape[2]) , return_sequences=True ));
+            print("[KER_Model_loader: loaded build {0}]".format(Build))
+        elif (Build == '4'):
+            k.add(LSTM(units=80, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]) ,  return_sequences=True ));
             k.add(LSTM(units=160, activation='relu'))
             k.add(Dense(units=160, activation='relu'));
-            k.add(Dense(dataset['Y'].shape[1], activation='sigmoid'));
+            k.add(Dense(Model._D_Y_SHAPE[1], activation='sigmoid'));
             k.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
+            print("[KER_Model_loader: loaded build {0}]".format(Build))
         
-        return k;
-            
-                
-        
+        Model._M = k;
+    

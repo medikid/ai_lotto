@@ -3,9 +3,15 @@ import os
 # %run '../ifile.py'
 # %run '../idata.py'
 # %run '../idataset.py'
-# from ipynb.fs.full.ifile import iFile
-# from ipynb.fs.full.idata import Data
-# from ipynb.fs.full.idataset import Dataset
+# from ipynb.fs.full.ifile 
+from ifile import iFile
+# from ipynb.fs.full.idata 
+from idata import Data
+# from ipynb.fs.full.idataset 
+from idataset import Dataset
+# from ker_model import KER_Model
+# from tfl_model import TFL_Model
+# from ker_model_loader import KER_Model_Loader
 
 class Model(iFile):
     _M=None;
@@ -14,7 +20,11 @@ class Model(iFile):
     _API = None;
     _BUILD = '0'; #model architecture/layers
     _MAKE = '0'; #Same build, but differnet make parameters
-    _VERSION = '0'; #training / epoch 
+    _VERSION = '0'; #training / epoch
+    
+    #set Dataset IO Shape
+    _D_X_SHAPE = (0,0,0);
+    _D_Y_SHAPE = (0,0);
     
     #set default model
     _FOLDER_TYPE = 'models'
@@ -28,6 +38,8 @@ class Model(iFile):
     
     def __init__(self, ModelID, Dataset, FileFormat='h5'):
         self._ID = ModelID;
+        self._D_X_SHAPE = Dataset._D['X'].shape;
+        self._D_Y_SHAPE = Dataset._D['Y'].shape;
         super().__init__(ModelID, Dataset._FOLDER_PATH, FileFormat);
         self.decipher_file_name();
         
@@ -87,14 +99,18 @@ class Model(iFile):
         
         self._FILE_PATH = FilePath;
         print("[iModel:derive_file_path] {0}".format(self._FILE_PATH))
-        
-    def derive_checkpoints_folder(self):
-        self._CHECKPOINTS_FOLDER = os.path.dirname(self._FULL_PATH) + '/checkpoints';
-        self.ensure_dirs(self._CHECKPOINTS_FOLDER)
-        
     
     def load(self):
-        print("[iModel:load] Not Implemented")
+        #this is a generic model.Lets load API_specific model here
+        if (self._API == 'ker'):
+            from ker_model import KER_Model
+            self.__class__ = KER_Model;
+            print("[Model:loader] converted Model to KER_Model")
+        elif (self._API == 'tfl'):
+            from tfl_model import TFL_Model
+            self.__class__ = TFL_Model;
+            print("[Model:loader] converted Model to TFL_Model")        
+        self.load();
         pass;
     
     def get_untrained_folder_path(self):
@@ -110,14 +126,21 @@ class Model(iFile):
         untrained_file_path = self.get_untrained_folder_path()  + self._GAME + "." + self._API + "." + self._BUILD + ".h5";
         self._M.save(untrained_file_path);
         print("Saved untrained model {0}".format(untrained_file_path));
+    
         
-    def load_checkpoint(self, FileName):
-        chkpnt_file_path = self._CHECKPOINTS_FOLDER + '/' + FileName;
+    def derive_checkpoints_folder(self):
+        self._CHECKPOINTS_FOLDER = os.path.dirname(self._FULL_PATH) + '/checkpoints/';
+        self.ensure_dirs(self._CHECKPOINTS_FOLDER)
+        print('[iModel:derive_checkpoints_folder] Ensured {0}'.format(self._CHECKPOINTS_FOLDER))
+        
+    def load_checkpoint(self):
+        chkpnt_file_path = self._CHECKPOINTS_FOLDER + self._FILE_NAME +'.' + self._FILE_FORMAT;
         self._M.load(chkpnt_file_path);
         print('[iModel:load_checkpoint] Loaded {0}'.format(chkpnt_file_path))
         
     def save_checkpoint(self, FileName):
-        chkpnt_file_path = self._CHECKPOINTS_FOLDER + '/' + FileName;
+        chkpnt_file_path = self._CHECKPOINTS_FOLDER + self._FILE_NAME +'.' + self._FILE_FORMAT;
+        self._M.save(chkpnt_file_path)
         print('[iModel:save_checkpoint] Saved {0}'.format(chkpnt_file_path))
     
     def load_best_version(self):
