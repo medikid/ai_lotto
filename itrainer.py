@@ -32,7 +32,8 @@ class Trainer:
         file_name += self._MODEL._INFO['API']  + '.';
         file_name += self._MODEL._INFO['BUILD']  + '.';
         file_name += self._MODEL._INFO['MAKE']  + '.';
-        file_name += 'e{epoch:04d}';
+        #file_name += 'e'+str(self._MODEL._CHECKPOINT_EPOCH)+'+'+int('{epoch:04d}') ;
+        file_name += 'e{epoch:04d}' ;
         
         self._MODEL.derive_checkpoints_folder();    
         chkpnt_file = self._MODEL._CHECKPOINTS_FOLDER + file_name + '.h5';
@@ -63,7 +64,7 @@ class Trainer:
                             , shuffle = False \
                             #, class_weight=None \
                             #, sample_weight=None \
-                            #, initial_epoch = self._MODEL._CHECKPOINT_EPOCH \
+                            , initial_epoch = self._MODEL._CHECKPOINT_EPOCH \
                             #, steps_per_epoch=None \
                             #, validation_steps=None \
                             #, validation_freq=1 \
