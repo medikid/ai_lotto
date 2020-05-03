@@ -1,7 +1,9 @@
 
+import os
 from pathlib import Path
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
 class iFile:
     _FILE = None;
@@ -75,15 +77,15 @@ class iFile:
         FullPath += self._FILE_PATH;
         self._FULL_PATH = FullPath;
         
-        self.ensure_dirs(); #ensure Full Path exists        
+        self.ensure_dirs(self._FULL_PATH); #ensure Full Path exists        
         print("[ifile:derive_full_path] {0}".format(self._FULL_PATH))
         
     def get_full_path(self):
         print("[iFile:get_full_path] {0}".format(self.__FULL_PATH))
         return self._FULL_PATH;
     
-    def ensure_dirs(self):
-        path = Path(self._FULL_PATH)
+    def ensure_dirs(self, FilePath):
+        path = Path(FilePath)
         path.parent.mkdir(parents=True, exist_ok=True)
         
     def getVarType(self, Var):
@@ -107,8 +109,14 @@ class iFile:
     def isNumpyArray(self, Var):
         return self.getVarType(Var) == "NumpyArray";
     
+    def get_timestamp(dt_format="%Y%m%d%H%M%S"):
+        date_time = datetime.now();
+        
+        return date_time.strftime(dt_format)
+    
     def print_file_info(self):
         print("FILE NAME: {0}".format(self._FILE_NAME));
         print("FILE FORMAT(type): {0}[{1}]".format(self._FILE_FORMAT, self._FILE_TYPE));
         print("FILE PATH: {0}".format(self._FILE_PATH));
         print("FILE NAME PARTS: {0}".format(self._INFO));
+        

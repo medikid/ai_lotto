@@ -2,9 +2,11 @@
 import pandas as pd
 import numpy as np
 
-#!python3 '../ifile.py' #from ipynb.fs.full.ifile 
+#%run '../ifile.py' #
+#from ipynb.fs.full.ifile import iFile 
 from ifile import iFile
-#!python3 '../idata.py' #from ipynb.fs.full.idata 
+#%run '../idata.py' #
+#from ipynb.fs.full.idata import Data
 from idata import Data
 
 class Dataset(iFile):
@@ -105,7 +107,7 @@ class Dataset(iFile):
         self.derive_folder_path(self._INFO); #you don't need this for model
         self.derive_file_path();
         self.derive_full_path();        
-        self.ensure_dirs(); #ensure Full Path exists
+        self.ensure_dirs(self._FULL_PATH); #ensure Full Path exists
         
     def create_new_by_id(self, DF_Master, newDatasetID, nTests=15):
         self.derive_full_path_by_id(newDatasetID);        

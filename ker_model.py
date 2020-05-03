@@ -10,6 +10,7 @@ import pandas as pd
 
 class KER_Model(Model):
     _MODEL_PATH = None;
+    _CHECKPOINTS=[];
     
     def __init__(self, ModelID, Dataset):
         super().__init__(ModelID, Dataset)
