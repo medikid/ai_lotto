@@ -6,7 +6,7 @@ import numpy as np
 #from ipynb.fs.full.ifile import iFile 
 from ifile import iFile
 #%run '../idata.py' #
-#from ipynb.fs.full.idata import Data
+#from ipynb.fs.full.idata import Dataa
 from idata import Data
 
 class Dataset(iFile):
