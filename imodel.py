@@ -133,6 +133,25 @@ class Model(iFile):
         self.ensure_dirs(self._CHECKPOINTS_FOLDER)
         print('[iModel:derive_checkpoints_folder] Ensured {0}'.format(self._CHECKPOINTS_FOLDER))
         
+    def load_latest_checkpoint(self):
+        MAX_CHKPNT = 0;
+        for f in os.listdir(self._CHECKPOINTS_FOLDER):
+            CHKPNT = int(f.split('.')[-2][1:])
+            if (CHKPNT > MAX_CHKPNT):
+                MAX_CHKPNT = CHKPNT;
+        print("Latest checkpoint is {0}".format(MAX_CHKPNT))
+        
+        self._VERSION = 'e' + str(MAX_CHKPNT).zfill(4);
+        self._INFO['VERSION'] = self._VERSION;
+        
+        self._IS_CHECKPOINT = True;
+        self._CHECKPOINT_EPOCH = MAX_CHKPNT;
+        
+        #redireve file name
+        self._FILE_NAME = self._GAME + '.' + self._API + '.'+ self._BUILD + '.' + self._MAKE + '.' + self._VERSION ;
+        
+        self.load_checkpoint();
+        
     def load_checkpoint(self):
         chkpnt_file_path = self._CHECKPOINTS_FOLDER + self._FILE_NAME +'.' + self._FILE_FORMAT;
         self._M.load(chkpnt_file_path);

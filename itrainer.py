@@ -13,12 +13,14 @@ class Trainer:
     _BATCH_SIZE=100;
     _CALLBACKS=[]
     
-    def __init__(self, ModelID, DatasetID):
+    def __init__(self, ModelID, DatasetID, LoadLatestCheckpoint=False):
         self._DATASET = Dataset(DatasetID);
         self._DATASET.load()
         
         self._MODEL = Model(ModelID, self._DATASET);
         self._MODEL.load();
+        if (LoadLatestCheckpoint==True):
+            self._MODEL.load_latest_checkpoint();
        
     
     def set_callbacks(self, Callbacks={}):
