@@ -4,6 +4,7 @@ from imodel import Model
 import keras as kr
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
+from keras.optimizers import Adam
 
 class KER_Model_Loader:
     
@@ -46,6 +47,14 @@ class KER_Model_Loader:
                 k.add(Dense(units=160, activation='relu'));
                 k.add(Dense(Model._D_Y_SHAPE[1], activation='sigmoid'));
                 k.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy', 'binary_accuracy'])
+                print("[KER_Model_loader: loaded build {0}.{1}]".format(Build, Make))
+            elif (Make == '3'):
+                k.add(LSTM(units=80, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]) ,  return_sequences=True ));
+                k.add(LSTM(units=160, activation='relu'))
+                k.add(Dense(units=160, activation='relu'));
+                k.add(Dense(Model._D_Y_SHAPE[1], activation='sigmoid'));
+                k.compile(optimizer=Adam(learning_rate=0.01), loss='binary_crossentropy', metrics=['accuracy', 'binary_accuracy'])
+                #when u increase batchsize, decrease learning rate, so it learn slowly, take small step 
                 print("[KER_Model_loader: loaded build {0}.{1}]".format(Build, Make))
         
         Model._M = k;
