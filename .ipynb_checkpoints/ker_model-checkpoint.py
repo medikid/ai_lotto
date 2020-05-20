@@ -2,7 +2,6 @@
 #!python3 '../imodel.py' #from ipynb.fs.full.imodel 
 from imodel import Model
 from ker_model_loader import KER_Model_Loader
-
 import keras as kr
 from keras.models import Sequential, load_model
 from keras.layers import LSTM, Dense
@@ -20,12 +19,14 @@ class KER_Model(Model):
         print("[KER_Model:__init__]")
  
     def load(self, Untrained=False):
-        print("[KER_Model:load]: Loading {0}".format(self._FULL_PATH))
         if(Untrained ==  True):
+            print("[KER_Model:load]: Loading untrained {0}".format(self._FULL_PATH))
             self.load_untrained();
         elif (self._IS_CHECKPOINT == True):
-            self.load_checkpoint();
+            print("[KER_Model:load]: Loading checkpoint {0}".format(self._FULL_PATH))
+            self.load_checkpoint(); 
         else:
+            print("[KER_Model:load]: Loading new build {0}".format(self._FULL_PATH))
             KER_Model_Loader(self); #actually creates new model
         
         #compile once again

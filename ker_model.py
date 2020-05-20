@@ -18,13 +18,15 @@ class KER_Model(Model):
         self._MODEL_PATH = self._FULL_PATH;
         print("[KER_Model:__init__]")
  
-    def load(self, Untrained=False):
-        print("[KER_Model:load]: Loading {0}".format(self._FULL_PATH))
-        if(Untrained ==  True):
+    def load(self):        
+        if(self._IS_UNTRAINED ==  True):            
+            print("[KER_Model:load]: Loading untrained {0}".format(self._FULL_PATH))
             self.load_untrained();
-        elif (self._IS_CHECKPOINT == True):
+        elif (self._IS_CHECKPOINT == True):            
+            print("[KER_Model:load]: Loading checkpoint {0}".format(self._FULL_PATH))
             self.load_checkpoint();
         else:
+            print("[KER_Model:load]: Loading new build {0}".format(self._FULL_PATH))
             KER_Model_Loader(self); #actually creates new model
         
         #compile once again
