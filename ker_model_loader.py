@@ -64,6 +64,14 @@ class KER_Model_Loader:
                 k.compile(optimizer=Adam(learning_rate=0.01), loss='binary_crossentropy', metrics=['categorical_accuracy'])
                 #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
+            elif (Make == '5'):
+                k.add(LSTM(units=80, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]) ,  return_sequences=True ));
+                k.add(LSTM(units=160, activation='relu'))
+                k.add(Dense(units=160, activation='relu'));
+                k.add(Dense(Model._D_Y_SHAPE[1], activation='sigmoid'));
+                k.compile(optimizer=Adam(learning_rate=0.01), loss='binary_crossentropy', metrics=['binary_accuracy'])
+                #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
+                print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
         
         Model._M = k;
     
