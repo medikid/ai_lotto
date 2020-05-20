@@ -36,6 +36,8 @@ class Model(iFile):
     _CHECKPOINTS_FOLDER=None;
     _CHECKPOINT_EPOCH = 0;
     
+    _IS_UNTRAINED = False;
+    
     def __init__(self, ModelID, Dataset, FileFormat='h5'):
         self._ID = ModelID;
         self._D_X_SHAPE = Dataset._D['X'].shape;
@@ -76,6 +78,8 @@ class Model(iFile):
                 if(ids[4][0]=='e'):
                     self._IS_CHECKPOINT = True;
                     self._CHECKPOINT_EPOCH = int(ids[4][1:])
+                if (ids[4][0] == '0'):
+                    self._IS_UNTRAINED = True;
             else:
                 self._VERSION = '0';
         except IndexError:
@@ -118,7 +122,7 @@ class Model(iFile):
         
  
     def load_untrained(self):
-        untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD + ".h5";
+        untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD + "." + self._MAKE + ".h5";
         self._M.load(untrained_file_path);
         print("Saved untrained model {0}".format(untrained_file_path));
        
@@ -145,6 +149,7 @@ class Model(iFile):
         self._INFO['VERSION'] = self._VERSION;
         
         self._IS_CHECKPOINT = True;
+        self._IS_UNTRAINED = False;
         self._CHECKPOINT_EPOCH = MAX_CHKPNT;
         
         #redireve file name
