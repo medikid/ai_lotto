@@ -122,14 +122,14 @@ class Model(iFile):
         
  
     def load_untrained(self):
-        untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD + "." + self._MAKE + ".h5";
+        untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD + "." + self._MAKE + ".0.h5";
         self._M.load(untrained_file_path);
-        print("Saved untrained model {0}".format(untrained_file_path));
+        print("[iModel:load_untrained] Loaded untrained model {0}".format(untrained_file_path));   
        
     def save_untrained(self):
-        untrained_file_path = self.get_untrained_folder_path()  + self._GAME + "." + self._API + "." + self._BUILD + ".h5";
+        untrained_file_path = self.get_untrained_folder_path()  + self._GAME + "." + self._API + "." + self._BUILD + "." + self._MAKE + ".0.h5";
         self._M.save(untrained_file_path);
-        print("Saved untrained model {0}".format(untrained_file_path));
+        print("[iModel:save_untrained] Saved untrained model {0}".format(untrained_file_path));
     
         
     def derive_checkpoints_folder(self):

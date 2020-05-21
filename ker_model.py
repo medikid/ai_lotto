@@ -41,7 +41,7 @@ class KER_Model(Model):
         print('[KER_Model:load_checkpoint] Loaded {0}'.format(chkpnt_file_path))
     
     def load_untrained(self):
-        untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD + ".h5";
+        untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD  + "." + self._MAKE + ".0.h5";
         self._M = load_model(untrained_file_path);
         print("[KER_Model:load_untrained] {0}".format(untrained_file_path));
         
