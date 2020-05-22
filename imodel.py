@@ -1,17 +1,9 @@
 
 import os
-# %run '../ifile.py'
-# %run '../idata.py'
-# %run '../idataset.py'
-# from ipynb.fs.full.ifile 
+
 from ifile import iFile
-# from ipynb.fs.full.idata 
 from idata import Data
-# from ipynb.fs.full.idataset 
 from idataset import Dataset
-# from ker_model import KER_Model
-# from tfl_model import TFL_Model
-# from ker_model_loader import KER_Model_Loader
 
 class Model(iFile):
     _M=None;

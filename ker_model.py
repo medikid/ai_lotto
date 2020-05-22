@@ -6,6 +6,8 @@ import keras as kr
 from keras.models import Sequential, load_model
 from keras.layers import LSTM, Dense
 
+from custom_functions import cf_metrics, cf_losses
+
 import numpy as np
 import pandas as pd
 
