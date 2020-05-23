@@ -4,7 +4,8 @@ from imodel import Model
 from ker_model import KER_Model
 from tfl_model import TFL_Model
 
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, History, CSVLogger
+from custom_callbacks import cf_callbacks
 import matplotlib.pyplot as plt
 
 class Trainer:
@@ -23,24 +24,35 @@ class Trainer:
         self._MODEL.load();
         if (LoadLatestCheckpoint==True):
             self._MODEL.load_latest_checkpoint();
-            
        
     
     def set_callbacks(self, Callbacks={}):
          for key, val in Callbacks.items():
             if(key == 'per_epoch'):
                 self.set_checkpoint_per_epoch(val);
+            if(key=='csv_logger'):
+                self.get_csv_history(val);
+            if(key=='upload_history'):
+                self.upload_history_per_epoch(val);
+            if(key=='custom_callbacks'):
+                self.set_custom_callbacks(val);
                 
-    def get_history_per_epoch(self, PerEpoch=1):
-        chkpnt = ModelCheckpoint(            
-            chkpnt_file,
-            monitor='val_loss',
-            verbose=0,
-            save_best_only=False,
-            save_weights_only=False,
-            mode='auto',
-            period=PerEpoch);
-        self._CALLBACKS.append(chkpnt)
+    def set_custom_callbacks(self, CallBackName):
+        custom_callbacks = cf_callbacks();
+        self._CALLBACKS.append(custom_callbacks)
+        print("[itrainer:set_custom_callbacks] added custom_callback {0}".format(CallBackName))
+                
+                
+    def get_csv_history(self, PerEpoch=1):
+        csv_file='/home/work/ai_lotto/notebooks/db/csv_logs.csv'
+        csv_logger = CSVLogger(csv_file, separator=",", append=True);
+        self._CALLBACKS.append(csv_logger)
+        print("[itrainer:get_csv_histry] added csv_logger callback")
+                
+    def upload_history_per_epoch(self, PerEpoch=1):
+        history = History();
+        #self._CALLBACKS.append(chkpnt)
+        print("[itrainer:uplload_histry_per_epoch] added db_upload_history callback")
             
     
     def set_checkpoint_per_epoch(self, PerEpoch=5):
@@ -63,6 +75,7 @@ class Trainer:
             mode='auto',
             period=PerEpoch);
         self._CALLBACKS.append(chkpnt)
+        print("[itrainer:set_checkpoint_per_epoch] added model_checkpoint callback")
     
     def train(self, Epochs=10, BatchSize=100, Callbacks={}, Verbose=0):
         self._EPOCHS = Epochs;
