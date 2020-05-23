@@ -8,3 +8,5 @@
 %run '../tfl_model.py'
 %run '../ai.py'
 %run '../itrainer.py'
+%run '../custom_functions.py'
+

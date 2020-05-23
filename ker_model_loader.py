@@ -66,38 +66,49 @@ class KER_Model_Loader:
                 #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
             elif (Make == '6'):
-                k.compile(optimizer=Adam(learning_rate=0.01), loss='binary_crossentropy', metrics=[kr.metrics.Recall(top_k=20, name='recall_top20')])
+                k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Recall(name='recall')])
                 #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
             elif (Make == '7'):
+                k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Precision(name='precision')])
+                #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
+                print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
+            elif (Make == '8'):
+                k.compile(optimizer=Adam(learning_rate=0.01), loss='binary_crossentropy', metrics=[kr.metrics.Recall(top_k=20, name='recall_top20')])
+                #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
+                print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
+            elif (Make == '9'):
                 k.add(Dense(Model._D_Y_SHAPE[1], activation='sigmoid'));
                 k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Precision(top_k=20, name='precision_top20')])
                 #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
-            elif (Make == '8'):
+            elif (Make == '10'):
                 k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Recall(top_k=15, name='recall_top15')])
                 #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
-            elif (Make == '9'):
+            elif (Make == '11'):
                 k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Precision(top_k=15, name='precision_top15')])
                 #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
-            elif (Make == '10'):
+            elif (Make == '12'):
                 k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Recall(top_k=10, name='recall_top10')])
                 #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
-            elif (Make == '11'):
+            elif (Make == '13'):
                 k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Precision(top_k=10, name='precision_top10')])
                 #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
-            elif (Make == '12'):
-                k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Recall(name='recall')])
+                # Model._INFO['CUSTOM_FUNCTIONS'] = {'Precision' : kr.metrics.Precision};
+            elif (Make == '14'):
+                k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Recall(top_k=5, name='recall_top5')])
                 #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
-            elif (Make == '13'):
-                k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Precision(name='precision')])
+            elif (Make == '15'):
+                k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Precision(top_k=5, name='precision_top5')])
                 #when u increase batchsize, decrease learning rate, so it learn slowly, takes small step 
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
+                # Model._INFO['CUSTOM_FUNCTIONS'] = {'Precision' : kr.metrics.Precision};
+            
         
         elif (Build == '5'): #experimentation, will use custom functions
             # these are common layers for ker.5. We will revise compile layer for various makes

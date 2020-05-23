@@ -7,6 +7,7 @@ from keras.models import Sequential, load_model
 from keras.layers import LSTM, Dense
 
 from custom_functions import cf_metrics, cf_losses
+from keras.metrics import Recall, Precision
 
 import numpy as np
 import pandas as pd
@@ -39,12 +40,24 @@ class KER_Model(Model):
     
     def load_checkpoint(self):    
         chkpnt_file_path = self._CHECKPOINTS_FOLDER +  self._FILE_NAME +'.' + self._FILE_FORMAT;
-        self._M = load_model(chkpnt_file_path);
+        try:
+            self._M = load_model(chkpnt_file_path);
+        except ValueError:
+            print("Unable to load due to usage of unserializable custom model/layer/metrics")
+            print("Solution: Build/compile new model and load weights from checkpoint file")
+            KER_Model_Loader(self);
+            self._M.load_weights(chkpnt_file_path)
+       
         print('[KER_Model:load_checkpoint] Loaded {0}'.format(chkpnt_file_path))
     
     def load_untrained(self):
         untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD  + "." + self._MAKE + ".0.h5";
-        self._M = load_model(untrained_file_path);
+        try:
+            self._M = load_model(untrained_file_path);
+        except ValueError:
+            print("Unable to load due to usage of unserializable custom model/layer/metrics")
+            print("Solution: Build/compile new model")
+            KER_Model_Loader(self);
         print("[KER_Model:load_untrained] {0}".format(untrained_file_path));
         
     def save(self):
