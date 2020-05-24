@@ -89,14 +89,44 @@ class cf_metrics:
         f1Score = f1_score(y_true, y_pred)
         return f1Score
     
-       
+###############################################################    
+# Based on custom score defn using keras backend
+# modified to add threshold and top-k args
+##############################################################
+    @staticmethod
+    def recall_aa(y_true, y_pred, top_k = None, threshold = None):
+        pred = K.cast(K.greater(pred, threshold), K.floatx())
+        
+        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+        possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+        recall = true_positives / (possible_positives + K.epsilon())
+        return recall
+    
+    @staticmethod
+    def precision_aa(y_true, y_pred, , top_k = None, threshold = None):
+        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+        predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+        precision = true_positives / (predicted_positives + K.epsilon())
+        return precision
+    
+    @staticmethod
+    def f1_score_aa(y_true, y_pred, , top_k = None, threshold = None):
+        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+        predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+        precision = true_positives / (predicted_positives + K.epsilon())
+        
+        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+        possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+        recall = true_positives / (possible_positives + K.epsilon())
+        
+        f1Score = 2*((precision*recall)/(precision+recall+K.epsilon()));
+        return f1Score      
     
     
+
 class cf_losses:
     
     def loss_a(y_true, y_pred):
         pass;
-
-
-
+    
 

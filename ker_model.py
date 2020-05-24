@@ -43,10 +43,13 @@ class KER_Model(Model):
         try:
             self._M = load_model(chkpnt_file_path);
         except ValueError:
-            print("Unable to load due to usage of unserializable custom model/layer/metrics")
-            print("Solution: Build/compile new model and load weights from checkpoint file")
-            KER_Model_Loader(self);
+            print("Issue: Unable to load due to usage of unserializable custom model/layer/metrics")
+            
+            KER_Model_Loader(self);            
+            print("Solution-Step#1: Built/compiled new model")
+            
             self._M.load_weights(chkpnt_file_path)
+            print("Solution-Step#2: Loaded weights into new model from {0} ".format(chkpnt_file_path))
        
         print('[KER_Model:load_checkpoint] Loaded {0}'.format(chkpnt_file_path))
     

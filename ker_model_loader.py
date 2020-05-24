@@ -17,35 +17,35 @@ class KER_Model_Loader:
         Make = Model._INFO['MAKE']
         Version = Model._INFO['VERSION']
         k = Sequential();
-        
+                        
         if(Build == '1'):            
             if (Make == '1'):
-                k.add(LSTM(units=100, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]) , return_sequences=True ));
-                k.add(LSTM(units=100, activation='relu'))
-                k.add(Dense(Model._D_Y_SHAPE[1]));
+                k.add(LSTM(name='lstm_100_relu_{0}x{1}'.format(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]), units=100, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]) , return_sequences=True ));
+                k.add(LSTM(name='lstm_160_relu', units=100, activation='relu'))
+                k.add(Dense(name='dense_{0}'.format(Model._D_Y_SHAPE[1]), units=Model._D_Y_SHAPE[1]));
                 k.compile(optimizer='adam', loss='mse', metrics=['accuracy']);
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
         elif (Build == '2'):            
             if (Make == '1'):
-                k.add(LSTM(units=100, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2])   ,  return_sequences=True ));
-                k.add(LSTM(units=100, activation='relu'))
-                k.add(Dense(Model._D_Y_SHAPE[1]));
+                k.add(LSTM(name='lstm_100_relu_{0}x{1}'.format(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]), units=100, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2])   ,  return_sequences=True ));
+                k.add(LSTM(name='lstm_160_relu', units=100, activation='relu'))
+                k.add(Dense(name='dense_{0}'.format(Model._D_Y_SHAPE[1]), units=Model._D_Y_SHAPE[1]));
                 k.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
         elif (Build == '3'):            
             if (Make == '1'):
-                k.add(LSTM(units=80, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2])   ,  return_sequences=True ));
-                k.add(LSTM(units=160, activation='relu'))
-                k.add(Dense(units=160, activation='relu'));
-                k.add(Dense(Model._D_Y_SHAPE[1]));
+                k.add(LSTM(name='lstm_100_relu_{0}x{1}'.format(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]), units=80, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2])   ,  return_sequences=True ));
+                k.add(LSTM(name='lstm_160_relu', units=160, activation='relu'))
+                k.add(Dense(name='dense_160_relu', units=160, activation='relu'));
+                k.add(Dense(name='dense_{0}'.format(Model._D_Y_SHAPE[1]), units=Model._D_Y_SHAPE[1]));
                 k.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
         elif (Build == '4'):
             #these are common layers for ker.4
-            k.add(LSTM(units=80, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]) ,  return_sequences=True ));
-            k.add(LSTM(units=160, activation='relu'))
-            k.add(Dense(units=160, activation='relu'));
-            k.add(Dense(Model._D_Y_SHAPE[1], activation='sigmoid'));
+            k.add(LSTM(name='lstm_80_relu_{0}x{1}'.format(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]), units=80, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]) ,  return_sequences=True ));
+            k.add(LSTM(name='lstm_160_relu', units=160, activation='relu'))
+            k.add(Dense(name='dense_160_relu', units=160, activation='relu'));
+            k.add(Dense(name='dense_{0}_sigmoid'.format(Model._D_Y_SHAPE[1]), units=Model._D_Y_SHAPE[1], activation='sigmoid'));
             
             if (Make == '1'):
                 k.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
@@ -112,15 +112,15 @@ class KER_Model_Loader:
         
         elif (Build == '5'): #experimentation, will use custom functions
             # these are common layers for ker.5. We will revise compile layer for various makes
-            k.add(LSTM(units=80, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]) ,  return_sequences=True ));
-            k.add(LSTM(units=160, activation='relu'))
-            k.add(Dense(units=160, activation='relu'));
-            k.add(Dense(Model._D_Y_SHAPE[1], activation='sigmoid'));
+            k.add(LSTM(name='lstm_80_relu_{0}x{1}'.format(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]), units=80, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]) ,  return_sequences=True ));
+            k.add(LSTM(name='lstm_160_relu', units=160, activation='relu'))
+            k.add(Dense(name='dense_160_relu', units=160, activation='relu'));
+            k.add(Dense(name='dense_{0}_sigmoid'.format(Model._D_Y_SHAPE[1]), units=Model._D_Y_SHAPE[1], activation='sigmoid'));
             
             if (Make == '1'):
                 k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[cf_metrics.recall_a])
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
-            elif (Make == '2'):
+            elif (Make ==  '2'):
                 k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[cf_metrics.precision_a])
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
             elif (Make == '3'):

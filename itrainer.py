@@ -8,6 +8,8 @@ from keras.callbacks import ModelCheckpoint, History, CSVLogger
 from custom_callbacks import cf_callbacks
 import matplotlib.pyplot as plt
 
+import os;
+
 class Trainer:
     _MODEL = None
     _DATASET = None
@@ -44,11 +46,13 @@ class Trainer:
                 
                 
     def get_csv_history(self, PerEpoch=1):
-        csv_file='/home/work/ai_lotto/notebooks/db/csv_logs.csv'
+        current_folder = os.getcwd() #gives a array with current working folder i.e notebook folder
+        db_folder = current_folder[0] + '/db/'
+        csv_file= db_folder + 'csv_logs.csv'
         csv_logger = CSVLogger(csv_file, separator=",", append=True);
         self._CALLBACKS.append(csv_logger)
         print("[itrainer:get_csv_histry] added csv_logger callback")
-                
+        
     def upload_history_per_epoch(self, PerEpoch=1):
         history = History();
         #self._CALLBACKS.append(chkpnt)
@@ -63,18 +67,43 @@ class Trainer:
         #file_name += 'e'+str(self._MODEL._CHECKPOINT_EPOCH)+'+'+int('{epoch:04d}') ;
         file_name += 'e{epoch:04d}' ;
         
-        self._MODEL.derive_checkpoints_folder();    
-        chkpnt_file = self._MODEL._CHECKPOINTS_FOLDER + file_name + '.h5';
+        self._MODEL.derive_checkpoints_folder();        
         self._MODEL.ensure_dirs(chkpnt_file); #ensure checkpnt folder exists, folder doesn't work, so use filepath
+        
+        chkpnt_file = self._MODEL._CHECKPOINTS_FOLDER + file_name;
         chkpnt = ModelCheckpoint(            
             chkpnt_file,
-            monitor='val_loss',
+            monitor='loss',
             verbose=0,
             save_best_only=False,
             save_weights_only=False,
             mode='auto',
             period=PerEpoch);
         self._CALLBACKS.append(chkpnt)
+        
+        
+        chkpnt_file_ckpt = self._MODEL._CHECKPOINTS_FOLDER + file_name + '.ckpt';
+        chkpnt_ckpt = ModelCheckpoint(            
+            chkpnt_file_ckpt,
+            monitor='loss',
+            verbose=0,
+            save_best_only=False,
+            save_weights_only=False,
+            mode='auto',
+            period=PerEpoch);
+        self._CALLBACKS.append(chkpnt_ckpt)
+        
+        
+        chkpnt_file_h5 = self._MODEL._CHECKPOINTS_FOLDER + file_name + '.h5';
+        chkpnt_h5 = ModelCheckpoint(            
+            chkpnt_file_h5,
+            monitor='loss',
+            verbose=0,
+            save_best_only=False,
+            save_weights_only=False,
+            mode='auto',
+            period=PerEpoch);
+        self._CALLBACKS.append(chkpnt_h5)
         print("[itrainer:set_checkpoint_per_epoch] added model_checkpoint callback")
     
     def train(self, Epochs=10, BatchSize=100, Callbacks={}, Verbose=0):
