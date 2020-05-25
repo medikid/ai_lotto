@@ -47,7 +47,7 @@ class Trainer:
                 
     def get_csv_history(self, PerEpoch=1):
         current_folder = os.getcwd() #gives a array with current working folder i.e notebook folder
-        db_folder = current_folder[0] + '/db/'
+        db_folder = current_folder + '/db/'
         csv_file= db_folder + 'csv_logs.csv'
         csv_logger = CSVLogger(csv_file, separator=",", append=True);
         self._CALLBACKS.append(csv_logger)
@@ -66,11 +66,12 @@ class Trainer:
         file_name += self._MODEL._INFO['MAKE']  + '.';
         #file_name += 'e'+str(self._MODEL._CHECKPOINT_EPOCH)+'+'+int('{epoch:04d}') ;
         file_name += 'e{epoch:04d}' ;
+        chkpnt_file = self._MODEL._CHECKPOINTS_FOLDER + file_name;
         
         self._MODEL.derive_checkpoints_folder();        
         self._MODEL.ensure_dirs(chkpnt_file); #ensure checkpnt folder exists, folder doesn't work, so use filepath
         
-        chkpnt_file = self._MODEL._CHECKPOINTS_FOLDER + file_name;
+        
         chkpnt = ModelCheckpoint(            
             chkpnt_file,
             monitor='loss',
