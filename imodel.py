@@ -130,9 +130,14 @@ class Model(iFile):
         print('[iModel:derive_checkpoints_folder] Ensured {0}'.format(self._CHECKPOINTS_FOLDER))
         
     def load_latest_checkpoint(self):
-        MAX_CHKPNT = 0;
+        MAX_CHKPNT = 0; CHKPNT = 0;
         for f in os.listdir(self._CHECKPOINTS_FOLDER):
-            CHKPNT = int(f.split('.')[-2][1:])
+            f_splits = f.split('.');
+            if(len(f_splits) > 5):
+              CHKPNT = int(f_splits[-2][1:])
+            elif(len(f_splits) > 4 ):
+              CHKPNT = int(f_splits[-1][1:])
+
             if (CHKPNT > MAX_CHKPNT):
                 MAX_CHKPNT = CHKPNT;
         print("Latest checkpoint is {0}".format(MAX_CHKPNT))

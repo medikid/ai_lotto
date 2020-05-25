@@ -51,7 +51,7 @@ class Trainer:
         csv_file= db_folder + 'csv_logs.csv'
         csv_logger = CSVLogger(csv_file, separator=",", append=True);
         self._CALLBACKS.append(csv_logger)
-        print("[itrainer:get_csv_histry] added csv_logger callback")
+        print("[itrainer:get_csv_histry] added csv_logger callback {0}".format(csv_file))
         
     def upload_history_per_epoch(self, PerEpoch=1):
         history = History();
