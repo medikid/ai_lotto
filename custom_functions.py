@@ -103,7 +103,7 @@ class cf_metrics:
         return recall
     
     @staticmethod
-    def precision_aa(y_true, y_pred, top _k = None, threshold = None):
+    def precision_aa(y_true, y_pred, top_k = None, threshold = None):
         true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
         predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
         precision = true_positives / (predicted_positives + K.epsilon())
