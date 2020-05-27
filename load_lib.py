@@ -10,3 +10,10 @@
 %run '../itrainer.py'
 %run '../custom_functions.py'
 %run '../custom_callbacks.py'
+
+%run '../db/__init__.py'
+%run '../db/base.py'
+%run '../db/db_base.py'
+%run '../db/utils.py'
+%run '../db/models/training_session.py'
+%run '../db/models/training_log.py'

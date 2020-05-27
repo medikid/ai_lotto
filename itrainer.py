@@ -8,25 +8,74 @@ from keras.callbacks import ModelCheckpoint, History, CSVLogger
 from custom_callbacks import cf_callbacks
 import matplotlib.pyplot as plt
 
+from db.models import training_session, training_log
+
 import os;
 
 class Trainer:
     _MODEL = None
     _DATASET = None
+    _MODSET_ID = None
     _EPOCHS = 10;
     _BATCH_SIZE=100;
     _CALLBACKS=[]
     _INFO={}
+    _SESSION = None;
     
     def __init__(self, ModelID, DatasetID, LoadLatestCheckpoint=False):
-        self._DATASET = Dataset(DatasetID);
-        self._DATASET.load()
-        
-        self._MODEL = Model(ModelID, self._DATASET);
-        self._MODEL.load();
+        if (self.is_modset_id(ModelID)):
+            self._MODSET_ID = ModelID;
+            modelID, datasetID = self.parse_modset_id(self._MODSET_ID);
+            
+            self._DATASET = Dataset(datasetID);
+            self._DATASET.load()
+
+            self._MODEL = Model(modelID, self._DATASET);
+            self._MODEL.load();
+        else:
+            modelID = ModelID;
+            datasetID = DatasetID;
+            
+            self._DATASET = Dataset(datasetID);
+            self._DATASET.load()
+
+            self._MODEL = Model(modelID, self._DATASET);
+            self._MODEL.load();
+
+            self._MODSET_ID = self.derive_modset_id(self._MODEL, self._DATASET)        
+
         if (LoadLatestCheckpoint==True):
             self._MODEL.load_latest_checkpoint();
-       
+        
+        self._SESSION = training_session.TrainingSession(self._MODSET_ID);
+            
+    def derive_modset_id(self, Model, Dataset):
+        MODSET_ID = Model._INFO['GAME'] \
+                            +'.'+  Model._INFO['API'] \
+                            +'.'+  Model._INFO['BUILD'] \
+                            +'.'+  Model._INFO['MAKE'] \
+                            + '[' + Dataset._INFO['xnINPUTS'] \
+                            +'_'+  Dataset._INFO['xnDRAWS'] \
+                            +'_'+  Dataset._INFO['DATA_TYPE'] \
+                            + ']';
+        print("Modset ID: {0}".format(MODSET_ID))
+        return MODSET_ID;
+    
+    def parse_modset_id(self, modsetID):
+        ids = modsetID.split('[')
+        mods = ids[0].split('.')
+        dats = ids[1][:-1].split('_')
+        model_id = '{0}.{1}.{2}.{3}'.format(mods[0],mods[1], mods[2], mods[3])
+        dataset_id = '{0}_{1}_{2}_{3}'.format(mods[0],dats[0], dats[1], mods[2])
+        return model_id, dataset_id;
+        
+    def is_modset_id(self, id):
+        isModsetID = False;
+        ids = id.split('[');
+        if len(ids) > 1:
+            isModsetID = True;
+        return isModsetID;
+        
     
     def set_callbacks(self, Callbacks={}):
          for key, val in Callbacks.items():
@@ -41,6 +90,7 @@ class Trainer:
                 
     def set_custom_callbacks(self, CallBackName):
         custom_callbacks = cf_callbacks();
+        custom_callbacks.set_session(self._SESSION)
         self._CALLBACKS.append(custom_callbacks)
         print("[itrainer:set_custom_callbacks] added custom_callback {0}".format(CallBackName))
                 
@@ -110,7 +160,9 @@ class Trainer:
     def train(self, Epochs=10, BatchSize=100, Callbacks={}, Verbose=0):
         self._EPOCHS = Epochs;
         self._BATCH_SIZE = BatchSize;
-        self.set_callbacks(Callbacks);       
+        self.set_callbacks(Callbacks);
+        
+        self._SESSION.start_session(self._MODEL._CHECKPOINT_EPOCH, self._EPOCHS, self._BATCH_SIZE)
                 
         self._INFO['HISTORY'] = self._MODEL._M.fit( x= self._DATASET._D['X'] \
                             , y= self._DATASET._D['Y'] \
@@ -131,6 +183,9 @@ class Trainer:
                             #, workers=1 \
                             #, use_multiprocessing=False\
                             );
+        
+        self._SESSION.end_session();
+        
     
     def plt_history(self):
         legends=[]

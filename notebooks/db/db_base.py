@@ -1,19 +1,15 @@
-'''
-Created on Dec 22, 2017
-
-@author: somaj
-'''
 
 from sqlalchemy import Column, Integer, Numeric, String, DateTime, Float, Boolean
 from sqlalchemy import select, delete, update, insert, exc
 from sqlalchemy import func, distinct
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.schema import CreateTable
 
-from hotspot.db import db_init;
-from hotspot.models import Base
+from db import db_init;
+from db.base import Base
 
 from datetime import datetime
-from utils import Utils;
+#from utils import Utils;
 #from MySQLdb.constants.FLAG import AUTO_INCREMENT
 
 import pandas as pd
@@ -33,9 +29,12 @@ class DBBase():
     __primaryKeyValue=''
     base=''
     db_engine=''
-    extend_existing=True 
+    extend_existing=True
+    db_type = 'SQLITE';
+    db = '';
    
     def __init__(self):
+        self.db = db_init(self.db_type)
         pass;
         
     def setupDBBase(self, className, PrimaryKeyField, PrimaryKeyValue):
@@ -79,6 +78,7 @@ class DBBase():
     
     def create_table(self):
         self.base.metadata.create_all(self.db_engine);
+        #CreateTable(self.__table__)
         pass
         
     def db_save(self):
@@ -160,7 +160,7 @@ class DBBase():
             update_statement += x + '=' + str(y);
             z+=1;
 
-        #print("Update: ", update_statement, " Filter By: ", filter_statement)
+        print("Update: ", update_statement, " Filter By: ", filter_statement)
 
         query = self.db.session.query(self.__className).filter(filter_statement).update(update_key_values, synchronize_session='fetch');
         self.db.session.commit()

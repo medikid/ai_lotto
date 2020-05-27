@@ -1,8 +1,13 @@
 
 import keras as K
+from db.models import training_session, training_log
 
 class cf_callbacks(K.callbacks.Callback):
 #on_{train, epoch, batch}_{begin, end}
+    _SESSION = None;
+    
+    def set_session(self, session):
+        self._SESSION = session;
 
     def on_train_begin(self, logs=None):
         if (logs is not None):
@@ -22,6 +27,8 @@ class cf_callbacks(K.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
         if (logs is not None):
             keys = list(logs.keys())
+            log = training_log.TrainingLog(self._SESSION.modset_id, self._SESSION.train_sess_id)
+            log.set_log(epoch, logs[keys[0]], keys[1], logs[keys[1]])
             print("[cf_callbacks] End epoch {} of training; got log keys: {}".format(epoch, keys))
 
 #     def on_test_begin(self, logs=None):
