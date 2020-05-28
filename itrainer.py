@@ -205,5 +205,21 @@ class Trainer:
 #         plt.ylabel('loss')
 #         plt.xlabel('epoch')
 #         plt.show()
+
+    def plt_db_logs(self, ModsetID=None):
+        if(ModsetID == None):
+            ModsetID = self._MODSET_ID;
+        
+        trainingLog = training_log.TrainingLog(ModsetID);
+        df_logs = trainingLog.get_dataframe();
+        df_logs.set_index('train_log_id', inplace=True)
+        logs = df_logs.loc[df_logs.modset_id == ModsetID ]
+
+        logs.plot(kind='line',x='epoch',y='loss',ax=plt.gca())
+        logs.plot(kind='line',x='epoch',y='metric_value', legend='precision_top10', color='red', ax=plt.gca())
+
+        plt.title('{0} - Loss vs {1}'.format(ModsetID, logs['metric_name'].unique()[0]))
+        plt.legend(['loss',logs['metric_name'].unique()[0]])
+        plt.show()
         
       
