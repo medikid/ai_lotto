@@ -144,6 +144,31 @@ class KER_Model_Loader:
             elif (Make == '9'):
                 k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[cf_metrics.f1_score_c])
                 print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
-        
+                
+        elif (Build == '6'): #experiment with number of hidden layers and its size
+            # size of each hidden layer must between input size and output size. Max = (2/3)input + ouput i.e. 140
+            k.add(LSTM(name='lstm_80_relu_{0}x{1}'.format(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]), units=80, activation='relu', input_shape=(Model._D_X_SHAPE[1],Model._D_X_SHAPE[2]) ,  return_sequences=True ));
+            k.add(LSTM(name='lstm_80_relu_1', units=80, activation='relu', return_sequences=True ))
+            
+            if (Make == '1'):
+                k.add(LSTM(name='lstm_80_relu_2', units=80, activation='relu', return_sequences=False))
+                print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
+            elif (Make == '2'):
+                k.add(LSTM(name='lstm_80_relu_2', units=80, activation='relu', return_sequences=False))
+                k.add(Dense(name='dense_80_relu_3', units=80, activation='relu'))
+                print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
+            elif (Make=='3'):
+                k.add(LSTM(name='lstm_80_relu_2', units=80, activation='relu', return_sequences=True))
+                k.add(LSTM(name='lstm_80_relu_3', units=80, activation='relu', return_sequences=False))
+                print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
+            elif (Make=='4'):
+                k.add(LSTM(name='lstm_80_relu_2', units=80, activation='relu', return_sequences=True))
+                k.add(LSTM(name='lstm_80_relu_3', units=80, activation='relu', return_sequences=False))
+                k.add(Dense(name='dense_80_relu_4', units=80, activation='relu'))
+                print("[KER_Model_loader: loaded new build {0}.{1}]".format(Build, Make))
+                      
+            k.add(Dense(name='dense_{0}_sigmoid'.format(Model._D_Y_SHAPE[1]), units=Model._D_Y_SHAPE[1], activation='sigmoid'));
+            k.compile(optimizer='adam', loss='binary_crossentropy', metrics=[kr.metrics.Precision(top_k=10, name='precision_top10')])
+            print(k.summary())
         Model._M = k;
     
