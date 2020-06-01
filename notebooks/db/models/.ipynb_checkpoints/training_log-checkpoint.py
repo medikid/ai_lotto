@@ -58,7 +58,7 @@ class TrainingLog(Base, DBBase):
         self.metric_name = metricName;
         self.metric_value = metricValue;
 
-        self.datetime = datetime.now();
+        self.datetime = Utils.getTimeStamp();
         
         #lets save it to db
         self.db_save();

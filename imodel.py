@@ -12,7 +12,8 @@ class Model(iFile):
     _API = None;
     _BUILD = '0'; #model architecture/layers
     _MAKE = '0'; #Same build, but differnet make parameters
-    _VERSION = '0'; #training / epoch
+    _VERSION = '0'; #hyperparameter    
+    _CHECKPOINT = '0'; #epoch
     
     #set Dataset IO Shape
     _D_X_SHAPE = (0,0,0);
@@ -26,11 +27,12 @@ class Model(iFile):
     
     _IS_CHECKPOINT = False;
     _CHECKPOINTS_FOLDER=None;
+    _CHECKPOINT_FORMAT = '.h5'
     _CHECKPOINT_EPOCH = 0;
     
     _IS_UNTRAINED = False;
     
-    def __init__(self, ModelID, Dataset, FileFormat='h5'):
+    def __init__(self, ModelID, Dataset, FileFormat='.h5'):
         self._ID = ModelID;
         self._D_X_SHAPE = Dataset._D['X'].shape;
         self._D_Y_SHAPE = Dataset._D['Y'].shape;
@@ -51,6 +53,7 @@ class Model(iFile):
         self._INFO['BUILD'] = self._BUILD;
         self._INFO['MAKE'] = self._MAKE;
         self._INFO['VERSION'] = self._VERSION;
+        self._INFO['CHECKPOINT']=self._CHECKPOINT;
         self._INFO['IS_CHECKPOINT'] = self._IS_CHECKPOINT;
         self._INFO['CHECKPOINT_EPOCH'] = self._CHECKPOINT_EPOCH;
         print("[iModel:set_decipher_info] {0}".format(self._INFO))
@@ -61,19 +64,27 @@ class Model(iFile):
             self._GAME = ids[0]
             self._API = ids[1]
             self._BUILD = ids[2]
+            
             if (len(ids) > 3):
                 self._MAKE = ids[3];
             else:
                 self._MAKE= '0';
+                
             if (len(ids) > 4):
                 self._VERSION = ids[4]
-                if(ids[4][0]=='e'):
-                    self._IS_CHECKPOINT = True;
-                    self._CHECKPOINT_EPOCH = int(ids[4][1:])
-                if (ids[4][0] == '0'):
-                    self._IS_UNTRAINED = True;
             else:
                 self._VERSION = '0';
+                
+            if (len(ids) > 5):
+                self._CHECKPOINT = ids[5]
+                if(ids[5][0]=='e'):
+                    self._IS_CHECKPOINT = True;
+                    self._CHECKPOINT_EPOCH = int(ids[5][1:])
+                if (ids[5][0] == '0'):
+                    self._IS_UNTRAINED = True;
+            else:
+                self._CHECKPOINT = '0'
+                
         except IndexError:
             self.LoadBestVersion();
         
@@ -89,9 +100,10 @@ class Model(iFile):
         FilePath += self._INFO['API'] + "/";
         FilePath += str(self._INFO['BUILD']) + "/";
         FilePath += str(self._INFO['MAKE']) + "/";
-        #FilePath += "/" + self._INFO['VERSION'];
+        if (int(self._INFO['VERSION']) > 0):
+            FilePath += self._INFO['VERSION'] + "/" ;
         FilePath += self._FILE_NAME;
-        FilePath += "." + self._FILE_FORMAT;
+        FilePath += self._FILE_FORMAT;
         
         self._FILE_PATH = FilePath;
         print("[iModel:derive_file_path] {0}".format(self._FILE_PATH))
@@ -114,15 +126,17 @@ class Model(iFile):
         
  
     def load_untrained(self):
-        untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD + "." + self._MAKE + ".0.h5";
+        untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD + "." + self._MAKE + self._VERSION + ".0.h5";
         self._M.load(untrained_file_path);
         print("[iModel:load_untrained] Loaded untrained model {0}".format(untrained_file_path));   
        
     def save_untrained(self):
-        untrained_file_path = self.get_untrained_folder_path()  + self._GAME + "." + self._API + "." + self._BUILD + "." + self._MAKE + ".0.h5";
+        untrained_file_path = self.get_untrained_folder_path()  + self._GAME + "." + self._API + "." + self._BUILD + "." + self._MAKE + self._VERSION + ".0.h5";
         self._M.save(untrained_file_path);
         print("[iModel:save_untrained] Saved untrained model {0}".format(untrained_file_path));
-    
+        
+    def set_checkpoint_format(self, ChkptFormat='.h5'):
+        self._CHECKPOINT_FORMAT = ChkptFormat
         
     def derive_checkpoints_folder(self):
         self._CHECKPOINTS_FOLDER = os.path.dirname(self._FULL_PATH) + '/checkpoints/';
@@ -133,34 +147,37 @@ class Model(iFile):
         MAX_CHKPNT = 0; CHKPNT = 0;
         for f in os.listdir(self._CHECKPOINTS_FOLDER):
             f_splits = f.split('.');
-            if(len(f_splits) > 5):
-              CHKPNT = int(f_splits[-2][1:])
-            elif(len(f_splits) > 4 ):
-              CHKPNT = int(f_splits[-1][1:])
+            #print(f_splits)
+            if(len(f_splits) > 6):
+                print(f_splits,"-6-",f_splits[-2])
+                CHKPNT = int(f_splits[-2][1:])
+            elif(len(f_splits) > 5 ):
+                print(f_splits,"-5-",f_splits[-1])
+                CHKPNT = int(f_splits[-1][1:])
 
             if (CHKPNT > MAX_CHKPNT):
                 MAX_CHKPNT = CHKPNT;
         print("Latest checkpoint is {0}".format(MAX_CHKPNT))
         
-        self._VERSION = 'e' + str(MAX_CHKPNT).zfill(4);
-        self._INFO['VERSION'] = self._VERSION;
+        self._CHECKPOINT = 'e' + str(MAX_CHKPNT).zfill(4);
+        self._INFO['CHECKPOINT'] = self._CHECKPOINT;
         
         self._IS_CHECKPOINT = True;
         self._IS_UNTRAINED = False;
         self._CHECKPOINT_EPOCH = MAX_CHKPNT;
         
         #redireve file name
-        self._FILE_NAME = self._GAME + '.' + self._API + '.'+ self._BUILD + '.' + self._MAKE + '.' + self._VERSION ;
+        self._FILE_NAME = self._GAME + '.' + self._API + '.'+ self._BUILD + '.' + self._MAKE + '.' + self._VERSION + '.' + self._CHECKPOINT;
         
         self.load_checkpoint();
         
     def load_checkpoint(self):
-        chkpnt_file_path = self._CHECKPOINTS_FOLDER + self._FILE_NAME +'.' + self._FILE_FORMAT;
+        chkpnt_file_path = self._CHECKPOINTS_FOLDER + self._FILE_NAME + self._CHECKPOINT_FORMAT;
         self._M.load(chkpnt_file_path);
         print('[iModel:load_checkpoint] Loaded {0}'.format(chkpnt_file_path))
         
     def save_checkpoint(self, FileName):
-        chkpnt_file_path = self._CHECKPOINTS_FOLDER + self._FILE_NAME +'.' + self._FILE_FORMAT;
+        chkpnt_file_path = self._CHECKPOINTS_FOLDER + self._FILE_NAME + self._CHECKPOINT_FORMAT;
         self._M.save(chkpnt_file_path)
         print('[iModel:save_checkpoint] Saved {0}'.format(chkpnt_file_path))
     

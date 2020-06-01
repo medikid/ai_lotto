@@ -18,6 +18,7 @@ from db.utils import Utils
 
 import numpy as np
 from datetime import datetime
+from pytz import timezone
 
 class TrainingSession(Base, DBBase):
     __tablename__ = 'train_sessions'
@@ -72,10 +73,7 @@ class TrainingSession(Base, DBBase):
         
         
     def generate_sess_id(self):
-        sess_id_format = "%Y%m%d%H%M%S"
-        self.date_time = datetime.now();
-        
-        self.set_session_id(self.date_time.strftime(sess_id_format))
+        self.set_session_id(Utils.getTimeStampID())
         print("New Session ID: ", self.train_sess_id)
         return self.train_sess_id;
     
@@ -86,12 +84,12 @@ class TrainingSession(Base, DBBase):
         return self.train_sess_id;
         
     def set_start_time(self):
-        self.start_datetime = datetime.now()
+        self.start_datetime = Utils.getLocalTimeStamp()
         
     def set_end_time(self):
-        self.end_datetime = datetime.now();
+        self.end_datetime = Utils.getLocalTimeStamp()
         
     def get_time_elapsed(self):
-        time_elapsed = datetime.now() - self.start_datetime;
+        time_elapsed = self.end_datetime - self.start_datetime.replace(tzinfo=self.end_datetime.tzinfo);
         return time_elapsed.total_seconds();
         

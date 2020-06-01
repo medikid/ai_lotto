@@ -10,7 +10,7 @@ from numpy import array
 from ifile import iFile
 
 class Data(iFile):
-    _FILE_FORMAT = "pkl"
+    _FILE_FORMAT = ".pkl"
     _DATA_FOLDER = None;
     _DF_MASTER = None
     _DF_IDs = None;
@@ -54,7 +54,7 @@ class Data(iFile):
         self._FOLDER_PATH = 'data/' + self._GAME + "/";
         
     def derive_file_path(self):
-        self._FILE_PATH = "master" + "/" + self._FILE_NAME +"." + self._FILE_FORMAT;
+        self._FILE_PATH = "master" + "/" + self._FILE_NAME + self._FILE_FORMAT;
     
     #v    
     def load_file(self):

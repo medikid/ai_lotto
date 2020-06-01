@@ -17,7 +17,7 @@ class Dataset(iFile):
     _FOLDER_TYPE = 'datasets'
     _DF_MASTER = None;
     
-    def __init__(self, DatasetID='', FolderPath= 'data/', FileFormat='npz'):
+    def __init__(self, DatasetID='', FolderPath= 'data/', FileFormat='.npz'):
         self._ID = DatasetID;
         super().__init__(DatasetID, FolderPath, FileFormat)
         self.decipher_file_name();
@@ -77,7 +77,7 @@ class Dataset(iFile):
         #split name and see if file format is included
         Fs=FileName.split(".");
         try:
-          self._FILE_FORMAT=Fs[1];
+          self._FILE_FORMAT='.'+Fs[1];
         except IndexError:
           print("File format not included in FIle Name")
         return self._FILE_FORMAT;
@@ -86,7 +86,7 @@ class Dataset(iFile):
         #derive file name from decipher  
         FilePath = self._FOLDER_TYPE + '/';
         FilePath += self._FILE_NAME;
-        FilePath += "." + self._FILE_FORMAT;
+        FilePath += self._FILE_FORMAT;
         self._FILE_PATH = FilePath;
         print("[iDataset:derive_file_path] {0}".format(self._FILE_PATH))
         

@@ -73,7 +73,7 @@ class TrainingSession(Base, DBBase):
         
     def generate_sess_id(self):
         sess_id_format = "%Y%m%d%H%M%S"
-        self.date_time = datetime.now();
+        self.date_time = Utils.getTimeStamp();
         
         self.set_session_id(self.date_time.strftime(sess_id_format))
         print("New Session ID: ", self.train_sess_id)
@@ -86,12 +86,12 @@ class TrainingSession(Base, DBBase):
         return self.train_sess_id;
         
     def set_start_time(self):
-        self.start_datetime = datetime.now()
+        self.start_datetime = Utils.getTimeStamp();
         
     def set_end_time(self):
-        self.end_datetime = datetime.now();
+        self.end_datetime = Utils.getTimeStamp()
         
     def get_time_elapsed(self):
-        time_elapsed = datetime.now() - self.start_datetime;
+        time_elapsed = Utils.getTimeStamp() - self.start_datetime;
         return time_elapsed.total_seconds();
         

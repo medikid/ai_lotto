@@ -29,9 +29,9 @@ class Archiver:
             srcFileFormat = srcFilePath.split('.')[-1]; # 'h5'
             srcFileName = os.path.basename(srcFilePath);
             game = srcFilePath.split('/')[2]
-            if (srcFileFormat == 'h5'): 
+            if (srcFileFormat == 'h5' or srcFileFormat == 'ckpt' or srcFileFormat[0] == 'e'): 
                 pass;
-                self.archive_h5(srcFilePath);
+                self.archive_h5_ckpt_e(srcFilePath);
             elif (srcFileFormat == 'pkl'):
                 pass;
                 self.archive_pkl(srcFilePath);
@@ -41,7 +41,7 @@ class Archiver:
             else:
                 print("Unknown format: {0}".format(srcFilePath))
                     
-    def archive_h5(self, srcFilePath):
+    def archive_h5_ckpt_e(self, srcFilePath):
         srcFolderPath = os.path.dirname(srcFilePath)
         srcFileName = os.path.basename(srcFilePath);
         srcFileFormat = srcFilePath.split('.')[-1];
@@ -51,7 +51,7 @@ class Archiver:
             xnInputs = folders[3];
             xnDraws = folders[4]
             srcDatasetID = '{0}_{1}_{2}_dr'.format(game,xnInputs,xnDraws)
-            dstFileName = '[{0}]{1}'.format(srcDatasetID, srcFileName);
+            dstFileName = '{0}[{1}]'.format(srcFileName, srcDatasetID,);
             dstFilePath = '{0}/{1}/models/{2}'.format(self.dstFolder, game, dstFileName)
             #print('{0}=>{1}'.format(srcFilePath, dstFilePath))
             if(os.path.exists(dstFilePath)):

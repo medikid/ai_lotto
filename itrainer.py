@@ -54,6 +54,7 @@ class Trainer:
                             +'.'+  Model._INFO['API'] \
                             +'.'+  Model._INFO['BUILD'] \
                             +'.'+  Model._INFO['MAKE'] \
+                            +'.'+  Model._INFO['VERSION'] \
                             + '[' + Dataset._INFO['xnINPUTS'] \
                             +'_'+  Dataset._INFO['xnDRAWS'] \
                             +'_'+  Dataset._INFO['DATA_TYPE'] \
@@ -65,7 +66,7 @@ class Trainer:
         ids = modsetID.split('[')
         mods = ids[0].split('.')
         dats = ids[1][:-1].split('_')
-        model_id = '{0}.{1}.{2}.{3}'.format(mods[0],mods[1], mods[2], mods[3])
+        model_id = '{0}.{1}.{2}.{3}.{4}'.format(mods[0],mods[1], mods[2], mods[3],mods[4])
         dataset_id = '{0}_{1}_{2}_{3}'.format(mods[0],dats[0], dats[1], mods[2])
         return model_id, dataset_id;
         

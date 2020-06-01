@@ -59,7 +59,7 @@ class iFile:
         #split name and see if file format is included
         Fs=FileName.split(".");
         try:
-          self._FILE_FORMAT=Fs[1];
+          self._FILE_FORMAT='.'+Fs[1];
         except IndexError:
           print("File format not included in FIle Name")
         

@@ -16,7 +16,7 @@ class KER_Model(Model):
     _MODEL_PATH = None;
     _CHECKPOINTS=[];
     
-    def __init__(self, ModelID, Dataset, FileFormat='h5'):
+    def __init__(self, ModelID, Dataset, FileFormat='.h5'):
         super().__init__(ModelID, Dataset, FileFormat)
         self._MODEL_PATH = self._FULL_PATH;
         print("[KER_Model:__init__]")
@@ -39,7 +39,7 @@ class KER_Model(Model):
         pass;
     
     def load_checkpoint(self):    
-        chkpnt_file_path = self._CHECKPOINTS_FOLDER +  self._FILE_NAME +'.' + self._FILE_FORMAT;
+        chkpnt_file_path = self._CHECKPOINTS_FOLDER +  self._FILE_NAME + self._CHECKPOINT_FORMAT;
         try:
             self._M = load_model(chkpnt_file_path);
         except ValueError:
@@ -48,7 +48,7 @@ class KER_Model(Model):
             KER_Model_Loader(self);            
             print("Solution-Step#1: Built/compiled new model")
             
-            self._M.load_weights(chkpnt_file_path)
+            load_status = self._M.load_weights(chkpnt_file_path)
             print("Solution-Step#2: Loaded weights into new model from {0} ".format(chkpnt_file_path))
        
         print('[KER_Model:load_checkpoint] Loaded {0}'.format(chkpnt_file_path))
