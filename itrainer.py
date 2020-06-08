@@ -67,7 +67,7 @@ class Trainer:
         mods = ids[0].split('.')
         dats = ids[1][:-1].split('_')
         model_id = '{0}.{1}.{2}.{3}.{4}'.format(mods[0],mods[1], mods[2], mods[3],mods[4])
-        dataset_id = '{0}_{1}_{2}_{3}'.format(mods[0],dats[0], dats[1], mods[2])
+        dataset_id = '{0}_{1}_{2}_{3}'.format(mods[0],dats[0], dats[1], dats[2])
         return model_id, dataset_id;
         
     def is_modset_id(self, id):

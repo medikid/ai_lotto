@@ -109,10 +109,16 @@ class iFile:
     def isNumpyArray(self, Var):
         return self.getVarType(Var) == "NumpyArray";
     
-    def get_timestamp(dt_format="%Y%m%d%H%M%S"):
+    def get_timestamp(self, dt_format="%Y%m%d%H%M%S"):
         date_time = datetime.now();
         
         return date_time.strftime(dt_format)
+    
+    def scan_files(self, src_folder='../data/', filter_by=''):
+        return [os.path.join(dp, f) for dp, dn, fn in os.walk(os.path.expanduser(src_folder)) for f in fn if filter_by in f];
+    
+    def filter_files(self, array_files=[], filter_by=''):
+        return [file for file in array_files if filter_by in file]
     
     def print_file_info(self):
         print("FILE NAME: {0}".format(self._FILE_NAME));

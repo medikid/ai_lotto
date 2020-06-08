@@ -18,3 +18,6 @@
 %run 'db/utils.py'
 %run 'db/models/training_session.py'
 %run 'db/models/training_log.py'
+%run 'db/models/ipred.py'
+
+%run '../imodset.py'

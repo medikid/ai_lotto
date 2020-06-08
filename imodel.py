@@ -8,12 +8,13 @@ from idataset import Dataset
 class Model(iFile):
     _M=None;
     _ID=None;
+    _MODSET_ID=None;
     _GAME=None;
     _API = None;
     _BUILD = '0'; #model architecture/layers
     _MAKE = '0'; #Same build, but differnet make parameters
     _VERSION = '0'; #hyperparameter    
-    _CHECKPOINT = '0'; #epoch
+    _CHECKPOINT = '0'; #string exxxx epoch
     
     #set Dataset IO Shape
     _D_X_SHAPE = (0,0,0);
@@ -28,9 +29,10 @@ class Model(iFile):
     _IS_CHECKPOINT = False;
     _CHECKPOINTS_FOLDER=None;
     _CHECKPOINT_FORMAT = '.h5'
-    _CHECKPOINT_EPOCH = 0;
+    _CHECKPOINT_EPOCH = 0; #int checkpoint#
     
     _IS_UNTRAINED = False;
+    _IS_ARCHIVED = False;
     
     def __init__(self, ModelID, Dataset, FileFormat='.h5'):
         self._ID = ModelID;
@@ -45,6 +47,8 @@ class Model(iFile):
         self.derive_game_path(Dataset._INFO) #derives 'data/keno'
         self.derive_full_path();
         self.derive_checkpoints_folder();
+        
+        self.derive_modset_id(Dataset)
         print("[iModel:__init__")
         
     def set_decipher_info(self):
@@ -57,6 +61,19 @@ class Model(iFile):
         self._INFO['IS_CHECKPOINT'] = self._IS_CHECKPOINT;
         self._INFO['CHECKPOINT_EPOCH'] = self._CHECKPOINT_EPOCH;
         print("[iModel:set_decipher_info] {0}".format(self._INFO))
+        
+    def derive_modset_id(self, Dataset):
+        self._MODSET_ID = self._INFO['GAME'] \
+                            +'.'+  self._INFO['API'] \
+                            +'.'+  self._INFO['BUILD'] \
+                            +'.'+  self._INFO['MAKE'] \
+                            +'.'+  self._INFO['VERSION'] \
+                            + '[' + Dataset._INFO['xnINPUTS'] \
+                            +'_'+  Dataset._INFO['xnDRAWS'] \
+                            +'_'+  Dataset._INFO['DATA_TYPE'] \
+                            + ']';
+        print("Modset ID: {0}".format(self._MODSET_ID))
+        return self._MODSET_ID;
         
     def decipher_file_name(self, Delimiter="."):        
         ids = self._FILE_NAME.split(Delimiter);
@@ -88,7 +105,7 @@ class Model(iFile):
         except IndexError:
             self.LoadBestVersion();
         
-        print("[iModel:decipher_file_name]")
+        print("[iModel:decipher_file_name] {0}".format(self._FILE_NAME))
         
         self.set_decipher_info();        
     
@@ -123,7 +140,17 @@ class Model(iFile):
     
     def get_untrained_folder_path(self):
         return self._ROOT_FOLDER + self._GAME_PATH +'untrained_models/';
-        
+    
+    def get_archived_folder_path(self):
+        return self._ROOT_FOLDER + 'archive/' + self._GAME.lower() + "/"
+    
+    def load_archived(self, fileFormat='.h5'):
+        archived_model_path = self.get_archived_folder_path() + 'models/' + self._MODSET_ID ;
+        if (str(self._CHECKPOINT)[0] == 'e'):
+            archived_model_path += '['+str(self._CHECKPOINT)+']'
+        archived_model_path += fileFormat
+        self._M.load(archived_model_path); 
+        print("[iModel:load_archived] Loaded arhived path {0}".format(arhived_model_path))
  
     def load_untrained(self):
         untrained_file_path = self.get_untrained_folder_path() + self._GAME + "." + self._API + "." + self._BUILD + "." + self._MAKE + self._VERSION + ".0.h5";
@@ -198,6 +225,13 @@ class Model(iFile):
         pass;
     
     def predict(self, x_test):
+        #convert 1/2-d to 3-d
+        if (x_test.ndim == 1):
+            x_test = x_test.reshape(1,1,x_test.shape[0])
+        elif (x_test.ndim == 2):
+            x_test = x_test.reshape(1,x_test.shape[0],x_test.shape[1])
+        
+        y_hat=self._M.predict(x_test)
         return y_hat;
     
     def save(self):
